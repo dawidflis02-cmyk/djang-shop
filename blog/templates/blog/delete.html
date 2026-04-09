@@ -1,0 +1,15 @@
+{% extends "blog/base.html" %}
+{% block title %}Usuń produkt{% endblock %}
+{% block content %}
+  <div class="form-box">
+    <h1>Usuń produkt</h1>
+    <p>Czy na pewno chcesz usunąć produkt "<strong>{{ post.title }}</strong>"?</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="actions">
+        <button class="button" type="submit">Tak, usuń</button>
+        <a class="button secondary" href="{% url 'post_detail' post.id %}">Anuluj</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

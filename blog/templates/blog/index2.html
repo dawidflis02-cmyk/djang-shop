@@ -1,0 +1,29 @@
+{% extends "blog/base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+  <article class="form-box">
+    <h1>{{ post.title }}</h1>
+    <p class="price">{{ post.price }} zł</p>
+    <p>
+      <span class="badge">{{ post.get_category_display }}</span>
+      {% if post.stock > 0 %}
+        <span class="badge">Na stanie: {{ post.stock }}</span>
+      {% else %}
+        <span class="badge out">Brak w magazynie</span>
+      {% endif %}
+    </p>
+    <p><strong>Dodano:</strong> {{ post.created_at }}</p>
+    <p><strong>Zaktualizowano:</strong> {{ post.updated_at }}</p>
+    {% if post.image %}
+      <p><img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 100%; border-radius: 8px;" /></p>
+    {% endif %}
+    <p>{{ post.description }}</p>
+    <div class="actions">
+      {% if post.stock > 0 %}
+        <a class="button" href="{% url 'cart_add' post.id %}">&#128722; Dodaj do koszyka</a>
+      {% endif %}
+      <a class="button secondary" href="{% url 'post_edit' post.id %}">Edytuj</a>
+      <a class="button" href="{% url 'post_delete' post.id %}">Usuń</a>
+    </div>
+  </article>
+{% endblock %}

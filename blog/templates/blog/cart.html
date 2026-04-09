@@ -1,0 +1,50 @@
+{% extends "blog/base.html" %}
+{% block title %}Koszyk{% endblock %}
+{% block content %}
+  <h1>&#128722; Koszyk</h1>
+  {% if items %}
+    <table style="width:100%; border-collapse: collapse; background:#fff; border-radius:10px; box-shadow: 0 8px 24px rgba(43,33,28,.08); overflow:hidden;">
+      <thead>
+        <tr style="background:#2b211c; color:#f9f4ee;">
+          <th style="padding:12px 16px; text-align:left;">Produkt</th>
+          <th style="padding:12px 16px; text-align:right;">Cena jedn.</th>
+          <th style="padding:12px 16px; text-align:center;">Ilość</th>
+          <th style="padding:12px 16px; text-align:right;">Suma</th>
+          <th style="padding:12px 16px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr style="border-bottom: 1px solid #ede6df;">
+            <td style="padding:12px 16px;">
+              <a href="{% url 'post_detail' item.post.id %}" style="color:#2b211c; font-weight:bold; text-decoration:none;">
+                {{ item.post.title }}
+              </a>
+            </td>
+            <td style="padding:12px 16px; text-align:right;">{{ item.post.price }} zł</td>
+            <td style="padding:12px 16px; text-align:center;">{{ item.quantity }}</td>
+            <td style="padding:12px 16px; text-align:right; font-weight:bold; color:#b44a2a;">{{ item.subtotal }} zł</td>
+            <td style="padding:12px 16px; text-align:center;">
+              <a class="button" href="{% url 'cart_remove' item.post.id %}">Usuń</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="background:#f4f1ec;">
+          <td colspan="3" style="padding:14px 16px; text-align:right; font-weight:bold;">Łącznie:</td>
+          <td style="padding:14px 16px; text-align:right; font-size:20px; font-weight:bold; color:#b44a2a;">{{ total }} zł</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="actions" style="margin-top:20px;">
+      <a class="button secondary" href="{% url 'post_list' %}">Kontynuuj zakupy</a>
+    </div>
+  {% else %}
+    <div class="form-box">
+      <p>Twój koszyk jest pusty.</p>
+      <a class="button" href="{% url 'post_list' %}">Przejdź do sklepu</a>
+    </div>
+  {% endif %}
+{% endblock %}
