@@ -1,0 +1,84 @@
+{% extends "chat/base.html" %}
+{% block title %}DM z {{ other.username }} – DiscordApp{% endblock %}
+
+{% block sidebar_channels %}
+  <a class="channel-item" href="{% url 'channel_list' %}"><i class="bi bi-arrow-left"></i> Kanały</a>
+{% endblock %}
+{% block sidebar_dms %}{% endblock %}
+
+{% block content %}
+  <div class="channel-header">
+    <i class="bi bi-person-circle" style="color:var(--text-muted);font-size:22px;"></i>
+    <h5>{{ other.username }}</h5>
+    <a href="{% url 'profile_user' other.username %}" style="margin-left:auto;color:var(--text-muted);font-size:13px;text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:4px;">
+      Profil
+    </a>
+    {% if is_blocked %}
+      <a href="{% url 'unblock_user' other.username %}" style="margin-left:8px;color:#f04747;font-size:13px;text-decoration:none;padding:4px 10px;border:1px solid #f04747;border-radius:4px;">
+        Odblokuj
+      </a>
+    {% else %}
+      <a href="{% url 'block_user' other.username %}" style="margin-left:8px;color:var(--text-muted);font-size:13px;text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:4px;">
+        Zablokuj
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="messages-area" id="dmArea">
+    {% for msg in conversation %}
+      <div class="message-row">
+        <div class="msg-avatar">
+          {% if msg.sender.avatar %}
+            <img src="{{ msg.sender.avatar.url }}" alt="{{ msg.sender.username }}"/>
+          {% else %}
+            {{ msg.sender.username|first|upper }}
+          {% endif %}
+        </div>
+        <div class="msg-body">
+          <div class="msg-header">
+            <a class="msg-author" href="{% url 'profile_user' msg.sender.username %}">{{ msg.sender.username }}</a>
+            <span class="msg-time">{{ msg.created_at|date:"d.m.Y H:i" }}</span>
+          </div>
+          <div class="msg-content">
+            {{ msg.content }}
+            {% if msg.image %}
+              <br><img src="{{ msg.image.url }}" alt="obraz"/>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div style="color:var(--text-muted);text-align:center;margin-top:32px;">
+        <i class="bi bi-chat-heart" style="font-size:48px;"></i>
+        <p style="margin-top:8px;">Zacznij prywatną rozmowę z {{ other.username }}!</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if is_blocked %}
+    <div class="message-input-area" style="text-align:center;color:var(--text-muted);">
+      Nie możesz wysyłać wiadomości — użytkownik jest zablokowany.
+    </div>
+  {% else %}
+    <div class="message-input-area">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="message-input-wrap">
+          {{ form.content }}
+          <label for="{{ form.image.id_for_label }}" title="Wyślij obraz" style="cursor:pointer;">
+            <i class="bi bi-image" style="color:var(--text-muted);font-size:20px;margin:0 4px;"></i>
+          </label>
+          <div style="display:none;">{{ form.image }}</div>
+          <button type="submit"><i class="bi bi-send-fill"></i></button>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const a = document.getElementById('dmArea');
+  a.scrollTop = a.scrollHeight;
+</script>
+{% endblock %}

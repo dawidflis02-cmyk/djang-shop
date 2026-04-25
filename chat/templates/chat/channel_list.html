@@ -1,0 +1,46 @@
+{% extends "chat/base.html" %}
+{% block title %}Kanały – DiscordApp{% endblock %}
+
+{% block sidebar_channels %}
+  {% for ch in public_channels %}
+    <a class="channel-item" href="{% url 'channel_detail' ch.pk %}">
+      <i class="bi bi-hash"></i> {{ ch.name }}
+    </a>
+  {% empty %}
+    <span class="channel-item text-muted" style="font-size:13px;">Brak kanałów</span>
+  {% endfor %}
+{% endblock %}
+
+{% block sidebar_dms %}
+  {% for u in dm_users %}
+    <a class="channel-item" href="{% url 'dm_detail' u.username %}">
+      <i class="bi bi-person"></i> {{ u.username }}
+    </a>
+  {% endfor %}
+{% endblock %}
+
+{% block content %}
+  <div class="channel-header">
+    <i class="bi bi-hash" style="color:var(--text-muted);font-size:22px;"></i>
+    <h5>Wybierz kanał</h5>
+  </div>
+  <div class="messages-area" style="align-items:center; justify-content:center; flex-direction:column; gap:16px;">
+    <i class="bi bi-chat-dots" style="font-size:80px; color:var(--text-muted);"></i>
+    <p style="color:var(--text-muted); font-size:18px;">Wybierz kanał z listy po lewej lub</p>
+    <a href="{% url 'channel_create' %}" class="btn" style="background:var(--accent);color:#fff;padding:10px 24px;border-radius:4px;text-decoration:none;font-weight:600;">
+      <i class="bi bi-plus-lg"></i> Utwórz nowy kanał
+    </a>
+
+    <div style="margin-top:32px; text-align:center;">
+      <h6 style="color:var(--text-muted); font-size:12px; text-transform:uppercase; letter-spacing:.04em;">Dostępne kanały</h6>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px;">
+        {% for ch in public_channels %}
+          <a href="{% url 'channel_detail' ch.pk %}"
+             style="background:var(--bg-sidebar);color:var(--text-main);padding:8px 16px;border-radius:4px;text-decoration:none;font-size:14px;">
+            <i class="bi bi-hash"></i> {{ ch.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

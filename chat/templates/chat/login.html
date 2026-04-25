@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Logowanie – DiscordApp</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body { background: #202225; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-card { background: #36393f; border-radius: 8px; padding: 32px 32px 24px; width: 100%; max-width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,.5); }
+    .auth-card h2 { color: #fff; text-align: center; font-weight: 700; margin-bottom: 8px; }
+    .auth-card p.sub { color: #8e9297; text-align: center; margin-bottom: 24px; font-size: 14px; }
+    label { color: #8e9297; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; display: block; }
+    input[type=text], input[type=password], input[type=email] {
+      width: 100%; background: #40444b; border: 1px solid #202225; border-radius: 4px;
+      color: #dcddde; padding: 10px 12px; font-size: 15px; outline: none; margin-bottom: 16px;
+    }
+    input:focus { border-color: #7289da; }
+    .btn-login { width: 100%; background: #7289da; border: none; color: #fff; padding: 11px; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+    .btn-login:hover { background: #677bc4; }
+    .auth-footer { text-align: center; margin-top: 16px; font-size: 13px; color: #8e9297; }
+    .auth-footer a { color: #7289da; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
+    .errorlist { list-style: none; padding: 0; color: #f04747; font-size: 13px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <h2>Witaj z powrotem!</h2>
+    <p class="sub">Cieszymy się, że znów tu jesteś!</p>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      {% endfor %}
+      {% if form.non_field_errors %}<ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      <button class="btn-login" type="submit">Zaloguj się</button>
+    </form>
+    <div class="auth-footer">
+      Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends "chat/base.html" %}
+{% block title %}Edytuj użytkownika – Panel{% endblock %}
+{% block sidebar_channels %}
+  <a class="channel-item" href="{% url 'admin_users' %}"><i class="bi bi-arrow-left"></i> Użytkownicy</a>
+{% endblock %}
+{% block sidebar_dms %}{% endblock %}
+
+{% block content %}
+  <div class="channel-header">
+    <i class="bi bi-person-gear" style="color:var(--text-muted);font-size:22px;"></i>
+    <h5>Edytuj: {{ edited_user.username }}</h5>
+  </div>
+  <div class="messages-area" style="justify-content:center;align-items:center;">
+    <div style="background:var(--bg-sidebar);border-radius:8px;padding:32px;width:100%;max-width:400px;">
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div style="margin-bottom:20px;">
+            <label style="color:#8e9297;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px;">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div style="color:#f04747;font-size:12px;margin-top:4px;">{{ field.errors }}</div>{% endif %}
+          </div>
+        {% endfor %}
+        <div style="display:flex;gap:12px;">
+          <button type="submit" style="background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:4px;font-size:15px;cursor:pointer;font-weight:600;">Zapisz</button>
+          <a href="{% url 'admin_users' %}" style="color:var(--text-muted);text-decoration:none;padding:10px;font-size:14px;align-self:center;">Anuluj</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
